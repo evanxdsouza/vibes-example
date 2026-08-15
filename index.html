@@ -9,15 +9,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --red:#ec3750;
-    --yellow:#ffbc27;
-    --blue:#338eda;
-    --green:#33d6a6;
-    --purple:#a633d6;
-    --dark:#19181d;
-    --cream:#fff9e8;
+    --red:#d03b3b;
+    --yellow:#f1b229;
+    --blue:#2f6fa7;
+    --green:#2c9c7a;
+    --purple:#743793;
+    --dark:#1e1e24;
+    --cream:#f7f0dc;
     --white:#ffffff;
-    --ink:#19181d;
+    --ink:#1e1e24;
+    --teal:#3b8c94;
   }
   *{ box-sizing:border-box; }
   html{ scroll-behavior:smooth; }
@@ -69,15 +70,16 @@
 
   /* ---------- Hero ---------- */
   .hero{ position:relative; padding:72px 0 60px; overflow:hidden; }
-  .hero::before{
-    content:''; position:absolute; top:-60px; right:-80px; width:280px; height:280px;
-    background:var(--yellow); border-radius:50%; opacity:0.55; z-index:0;
+  .hero-parallax-layer{ position:absolute; inset:0; z-index:0; pointer-events:none; }
+  .blob{
+    position:absolute; border-radius:50%; will-change:transform;
+    transition:transform .05s linear;
   }
-  .hero::after{
-    content:''; position:absolute; bottom:-100px; left:-100px; width:260px; height:260px;
-    background:var(--green); border-radius:50%; opacity:0.4; z-index:0;
-  }
+  .blob-a{ top:-60px; right:-80px; width:280px; height:280px; background:var(--yellow); opacity:0.55; }
+  .blob-b{ bottom:-100px; left:-100px; width:260px; height:260px; background:var(--green); opacity:0.4; }
+  .blob-c{ top:40%; left:38%; width:130px; height:130px; background:var(--blue); opacity:0.16; }
   .hero .wrap{ position:relative; z-index:1; }
+  .hero-content{ will-change:transform; }
   .badge-row{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px; }
   .badge{
     font-family:'Space Mono', monospace; font-size:12px; font-weight:700;
@@ -162,7 +164,7 @@
   .meet-strip{
     background:var(--dark); color:var(--cream); border-radius:22px;
     padding:34px 36px; display:flex; align-items:center; justify-content:space-between;
-    flex-wrap:wrap; gap:20px;
+    flex-wrap:wrap; gap:20px; position:relative; overflow:hidden;
   }
   .meet-strip .tag{ color:var(--yellow); margin-bottom:8px; display:block; }
   .meet-strip h3{ font-size:22px; font-weight:700; color:var(--white); }
@@ -171,11 +173,18 @@
     font-family:'Space Mono', monospace; font-size:13px; font-weight:700;
     background:var(--white); color:var(--dark); padding:10px 18px; border-radius:999px;
     display:inline-flex; align-items:center; gap:8px; white-space:nowrap;
+    position:relative; z-index:1;
+  }
+  .meet-strip::after{
+    content:''; position:absolute; width:220px; height:220px; border-radius:50%;
+    background:var(--red); opacity:0.18; right:-60px; bottom:-90px;
+    will-change:transform;
+    transform:translateY(var(--strip-parallax, 0px));
   }
 
   /* ---------- Join ---------- */
   .join{
-    background:var(--blue); border:3px solid var(--dark); border-radius:26px;
+    background:var(--teal); border:3px solid var(--dark); border-radius:26px;
     padding:52px 44px; display:grid; grid-template-columns:1.1fr 0.9fr; gap:40px; align-items:center;
     box-shadow:8px 8px 0 var(--dark); color:var(--white);
   }
@@ -209,6 +218,10 @@
     nav.links{ display:none; }
     .meet-strip{ flex-direction:column; align-items:flex-start; }
   }
+
+  @media (prefers-reduced-motion: reduce){
+    .blob, .hero-content, .meet-strip::after{ transition:none !important; }
+  }
 </style>
 </head>
 <body>
@@ -221,23 +234,30 @@
       <a href="#build">What We Do</a>
       <a href="#meet">Meet Us</a>
     </nav>
-    <a class="nav-join" href="#join">Join us →</a>
+    <a class="nav-join" href="https://clubs.hackclub.com/auth/member?join=MAGUBD">Join us →</a>
   </div>
 </header>
 
 <main id="top">
   <section class="hero">
+    <div class="hero-parallax-layer" aria-hidden="true">
+      <div class="blob blob-a" data-speed="0.25"></div>
+      <div class="blob blob-b" data-speed="0.4"></div>
+      <div class="blob blob-c" data-speed="0.6"></div>
+    </div>
     <div class="wrap">
-      <div class="badge-row">
-        <span class="badge pop-red">🔧 Student-run</span>
-        <span class="badge pop-blue"><span class="dot-live"></span> Part of Hack Club</span>
-        <span class="badge">📍 St Joseph's Boys' High School</span>
-      </div>
-      <h1 class="headline">Come build <span class="hl">cool stuff</span> with us.</h1>
-      <p class="lede">LTC Hack Club is our school's chapter of <strong>Hack Club</strong> — a global, teen-run network of thousands of high schoolers who'd rather ship a real project than sit through another slideshow. No grades. No syllabus. Just a room full of laptops and people building things.</p>
-      <div class="hero-ctas">
-        <a class="btn btn-primary" href="#join">🚀 Join the club</a>
-        <a class="btn btn-secondary" href="https://hackclub.com" target="_blank" rel="noopener">🌍 See Hack Club HQ</a>
+      <div class="hero-content" data-speed="-0.08">
+        <div class="badge-row">
+          <span class="badge pop-red">🔧 Student-run</span>
+          <span class="badge pop-blue"><span class="dot-live"></span> Part of Hack Club</span>
+          <span class="badge">📍 St Joseph's Boys' High School</span>
+        </div>
+        <h1 class="headline">Come build <span class="hl">cool stuff</span> with us.</h1>
+        <p class="lede">LTC Hack Club is our school's chapter of <strong>Hack Club</strong>! No grades. No syllabus. Just a room full of laptops and people building things.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-primary" href="https://clubs.hackclub.com/auth/member?join=MAGUBD">🚀 Join the club</a>
+          <a class="btn btn-secondary" href="https://hackclub.com" target="_blank" rel="noopener">🌍 See Hack Club HQ</a>
+        </div>
       </div>
     </div>
   </section>
@@ -250,7 +270,7 @@
       </div>
       <div class="about-grid">
         <div class="about-copy">
-          <p>Hack Club started as one high school coding club and grew into a <strong>global network of student-led clubs</strong> — thousands of teenagers across dozens of countries, all building software and hardware outside of class, all connected on the same Slack.</p>
+          <p>Hack Club started as one high school coding club and grew into a <strong>global network of student-led clubs</strong>. thousands of teenagers across dozens of countries, all building software and hardware outside of class, all connected on the same Slack.</p>
           <p>There's no curriculum. Instead, Hack Club runs <strong>YSWS programs</strong> — "You Ship, We Ship" — where the deal is simple: finish a real project, and Hack Club sends you hardware, funding, or a trip to go build even more. It rewards <em>shipping</em>, not attendance.</p>
           <p>LTC Hack Club is our local chapter — same network, same programs, same energy, just meeting down the hall instead of across the world.</p>
         </div>
@@ -273,23 +293,23 @@
       <div class="card-grid">
         <div class="card">
           <div class="card-icon red">🛠️</div>
-          <h3>Ship Nights</h3>
-          <p>Weekly meetups where you just... build. Websites, games, bots, hardware — you pick, we're just the room and the wifi.</p>
+          <h3>Ship Days</h3>
+          <p>Monthly meetups where you finish up your bigger projects and get mentorship from our experts, have fun talks with other members on anything else, and just have plain fun.</p>
         </div>
         <div class="card">
           <div class="card-icon blue">🎯</div>
           <h3>YSWS Programs</h3>
-          <p>Tap into Hack Club's global "You Ship, We Ship" programs — finish something real and the network sends you stuff for it.</p>
+          <p>Join Hack Club's YSWS, programs where you ship projects and we ship prizes! The aim of most of our sessions is to submit to these.</p>
         </div>
         <div class="card">
           <div class="card-icon green">⚡</div>
           <h3>Workshops</h3>
-          <p>Quick hands-on sessions on whatever's useful — Git, your first website, Arduino, or whatever someone in the club wants to teach.</p>
+          <p>Sessions that will teach what you need to know, from git to backends...</p>
         </div>
         <div class="card">
           <div class="card-icon yellow">🎉</div>
           <h3>Show & Tell</h3>
-          <p>Demo whatever you shipped, however unfinished. Half-broken projects get just as much applause as polished ones.</p>
+          <p>Demo whatever you shipped, however unfinished. Whether its your first website or your 100th backend. We accept them all... and give prizes for being brave enough to present.</p>
         </div>
       </div>
     </div>
@@ -301,9 +321,9 @@
         <div>
           <span class="tag">Where to find us</span>
           <h3>We meet inside the school's STEM lab.</h3>
-          <p>Bring a laptop if you've got one — curiosity works fine if you don't.</p>
+          <p>No need to bring anything! We have the laptops and the resources.</p>
         </div>
-        <span class="meet-pin">📍 SJBHS Technology Centre</span>
+        <span class="meet-pin">📍 Loyola Technology Centre @ SJBHS</span>
       </div>
     </div>
   </section>
@@ -313,13 +333,13 @@
       <div class="join">
         <div>
           <h2>Pull up a chair.</h2>
-          <p>No application. No portfolio. First session is just about figuring out what you want to build — we'll take it from there.</p>
+          <p>Just come! We'll give you the resources and the lessons to make an insane project.</p>
         </div>
         <div class="join-panel">
-          <div class="join-row"><span>WHO</span><span>SJBHS students, any grade</span></div>
-          <div class="join-row"><span>MEETS</span><span>Weekly — posted on Slack</span></div>
+          <div class="join-row"><span>WHO</span><span>SJBHS students, ages 13-18</span></div>
+          <div class="join-row"><span>MEETS</span><span>Informed on Clubs platform and In-Person</span></div>
           <div class="join-row"><span>NETWORK</span><span><a href="https://hackclub.com" target="_blank" rel="noopener">hackclub.com ↗</a></span></div>
-          <div class="join-row"><span>CONTACT</span><span><a href="mailto:evanxdsouza@gmail.com">evanxdsouza@gmail.com</a></span></div>
+          <div class="join-row"><span>CONTACT</span><span><a href="mailto:ltc@sjbhs.edu.in">ltc@sjbhs.edu.in</a></span></div>
         </div>
       </div>
     </div>
@@ -331,6 +351,53 @@
     <span class="footer-mark"><span class="spark"></span>LTC Hack Club</span>
   </div>
 </footer>
+
+<script>
+(function(){
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) return;
+
+  var blobs = Array.prototype.slice.call(document.querySelectorAll('.blob'));
+  var heroContent = document.querySelector('.hero-content');
+  var meetStrip = document.querySelector('.meet-strip');
+  var ticking = false;
+
+  function update(){
+    var y = window.scrollY || window.pageYOffset;
+
+    blobs.forEach(function(el){
+      var speed = parseFloat(el.getAttribute('data-speed')) || 0.3;
+      el.style.transform = 'translate3d(0,' + (y * speed) + 'px,0)';
+    });
+
+    if (heroContent){
+      var speed = parseFloat(heroContent.getAttribute('data-speed')) || -0.1;
+      heroContent.style.transform = 'translate3d(0,' + (y * speed) + 'px,0)';
+    }
+
+    if (meetStrip){
+      var rect = meetStrip.getBoundingClientRect();
+      var vh = window.innerHeight || document.documentElement.clientHeight;
+      // progress: 0 when strip enters viewport bottom, 1 when it leaves the top
+      var progress = 1 - (rect.top / vh);
+      progress = Math.max(0, Math.min(1, progress));
+      meetStrip.style.setProperty('--strip-parallax', (progress * 40 - 20) + 'px');
+    }
+
+    ticking = false;
+  }
+
+  function onScroll(){
+    if (!ticking){
+      window.requestAnimationFrame(update);
+      ticking = true;
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  update();
+})();
+</script>
 
 </body>
 </html>
